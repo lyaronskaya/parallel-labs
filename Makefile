@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 #СС=/usr/local/bin/clang-omp
 CC_FLAGS=-c -fopenmp -std=c++0x
 
