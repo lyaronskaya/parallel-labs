@@ -7,23 +7,24 @@
 #include <unistd.h>
 #include <vector>
 #include <ctime>
-//#include <libiomp/omp.h>
-#include <omp.h>
+#include <libiomp/omp.h>
+//#include <omp.h>
 #include <stdio.h>
+#include <stdexcept>
 
 using namespace std;
 
-const int MAX_THREADS = 5;
-int NUM_THREADS;
-
 typedef vector<vector<int> > field_t;
+
 field_t field;
 field_t prev_field;
-int FIELD_WIDTH, FIELD_HEIGHT;
+int num_threads;
+int field_width, field_height;
 bool break_work = false;
 omp_lock_t run_lock;
 omp_lock_t go_work_lock;
 omp_lock_t iter_ready;
+vector<omp_lock_t> row_locks;
 
 int iter_number, iter_todo;
 
@@ -32,22 +33,38 @@ int count_live_neighbors(int x, int y);
 void copy_field(int first, int last);
 int read_from_csv(string path, field_t& field);
 
+enum StateType
+{
+    NOT_STARTED,
+    NOT_RUNNING,
+    RUNNING,
+    STOPPED,
+    FINISHED
+};
+
 class IncorrectCommandException: public std::runtime_error {
 public:
     explicit IncorrectCommandException(const std::string& what):
-    std::runtime_error(what)
+    std::runtime_error (what)
     {}
 };
 
-void perform_field(int first, int last, int mutex_num) {
+struct WorkerArg {
+    int first;
+    int last;
+    int id;
+};
+
+void perform_field(int first, int last, int thread_id) {
     int p, live_nbs;
     for (int i = first; i < last; ++i) {
-//        if (i == first) {
-//            pthread_mutex_lock(&row_locks[(mutex_num - 1 + NUM_THREADS) % NUM_THREADS]);
-//        } else if (i == last - 1) {
-//            pthread_mutex_lock(&row_locks[mutex_num]);
-//        }
-        for (int j = 0; j < FIELD_HEIGHT; ++j) {
+        if (i == first) {
+            omp_set_lock(&row_locks[(thread_id - 1 + num_threads) % num_threads]);
+        } else if (i == last - 1) {
+            omp_set_lock(&row_locks[thread_id]);
+        }
+
+        for (int j = 0; j < field_height; ++j) {
             p = prev_field[i][j];
             live_nbs = count_live_neighbors(i, j);
             if (p == 1) {
@@ -58,31 +75,17 @@ void perform_field(int first, int last, int mutex_num) {
                     field[i][j] = 1;
             }
         }
-//        if (i == first) {
-//            pthread_mutex_unlock(&row_locks[(mutex_num - 1 + NUM_THREADS) % NUM_THREADS]);
-//        } else if (i == last - 1) {
-//            pthread_mutex_unlock(&row_locks[mutex_num]);
-//        }
+        if (i == first) {
+            omp_unset_lock(&row_locks[(thread_id - 1 + num_threads) % num_threads]);
+        } else if (i == last - 1) {
+            omp_unset_lock(&row_locks[thread_id]);
+        }
     }
 }
 
 
-void worker_func(void* argv) {
-    int *args = (int *)argv;
-    int first = args[0];
-    int last = args[1];
-    int thread_num = args[2];
-    bool is_break_work = false;
-    
+void worker_func(WorkerArg* arg) {
     while(true) {
-//#pragma omp critical(break_work)
-//        {
-//          if (break_work)
-//            is_break_work = true;
-//        }
-//        
-//        if (is_break_work)
-//            return;
         if (break_work) {
             return;
         }
@@ -90,61 +93,33 @@ void worker_func(void* argv) {
             sleep(2);
         omp_unset_lock(&go_work_lock);
         
-        perform_field(first, last, thread_num);
-        copy_field(first, last-1);
-#pragma omp barrier
+        perform_field(arg->first, arg->last, arg->id);
+        copy_field(arg->first, arg->last-1);
+
+        if (omp_get_thread_num() == 1) {
+            int per_thread = arg->last - arg->first;
+            for (int i = 0; i < num_threads; ++i) {
+                int locked_line_num = per_thread * (i + 1) - 1;
+                copy_field(locked_line_num, locked_line_num + 1);
+            }
+        }
+#pragma omp single copyprivate(iter_todo, iter_number)
+        {
+            iter_todo--;
+            iter_number++;
+        }
     }
     return;
 }
 
-void* master_func(void* args) {
-    int num_threads = ((int *)args)[0];
-    int per_thread = ((int *)args)[1];
-    while (true) {
-//        pthread_mutex_lock(&end_mutex);
-//        if (break_work) {
-//            pthread_mutex_unlock(&end_mutex);
-//            for (int i = 0; i < NUM_THREADS; ++i) {
-//                pthread_join(threads[i], NULL);
-//            }
-//            return NULL;
-//        }
-//        pthread_mutex_unlock(&end_mutex);
-//        
-//        pthread_mutex_lock(&run_mutex);
-//        while (iter_todo == 0 && !break_work)
-//            pthread_cond_wait(&run, &run_mutex);
-//        pthread_mutex_unlock(&run_mutex);
-//        
-//        pthread_mutex_lock(&work_mutex);
-//        pthread_cond_signal(&go_work);
-//        pthread_mutex_unlock(&work_mutex);
-//        
-//        for (int i = 0; i < num_threads; ++i) {
-//            sem_post(iter_ready);
-//        }
-//        
-//        for (int i = 0; i < num_threads; ++i) {
-//            int locked_line_num = per_thread * (i + 1) - 1;
-//            copy_field(locked_line_num, locked_line_num + 1);
-//        }
-//        
-//        iter_number++;
-//        pthread_mutex_lock(&iter_todo_mutex);
-//        iter_todo--;
-//        pthread_mutex_unlock(&iter_todo_mutex);
-//    }
-    return NULL;
-}
-
 struct Handler {
-    virtual void handle() = 0;
+    virtual void handle(StateType& state) = 0;
     virtual ~Handler() {}
 };
 
 struct StartHandler : public Handler {
     
-    void handle() {
+    void handle(StateType& state) {
         
         string arg1, file_name;
         int N, M, per_thread;
@@ -156,11 +131,11 @@ struct StartHandler : public Handler {
                 N = stoi(arg1);
                 cin >> M;
             
-                FIELD_WIDTH = N;
-                FIELD_HEIGHT = M;
-                field = vector<vector<int> >(FIELD_WIDTH, vector<int>(FIELD_HEIGHT));
+                field_width = N;
+                field_height = M;
+                field = vector<vector<int> >(field_width, vector<int>(field_height));
             
-                for (int i = 0; i < M; ++i) {
+                for (int i = 0; i < N; ++i) {
                     for (int j = 0; j < M; ++j) {
                         field[i][j] = rand() % 2;
                     }
@@ -169,40 +144,56 @@ struct StartHandler : public Handler {
             catch(...) {
                 file_name = arg1;
                 read_from_csv(file_name, field);
-                FIELD_WIDTH = field.size();
-                FIELD_HEIGHT = field[0].size();
+                field_width = field.size();
+                field_height = field[0].size();
             }
-            prev_field = vector<vector<int> >(FIELD_WIDTH, vector<int>(FIELD_HEIGHT));
-            copy_field(0, FIELD_WIDTH);
-            cin >> NUM_THREADS;
-            per_thread = FIELD_WIDTH / NUM_THREADS;
+            prev_field = vector<vector<int> >(field_width, vector<int>(field_height));
+            copy_field(0, field_width);
+            cin >> num_threads;
+            per_thread = field_width / num_threads;
+            row_locks.resize(num_threads);
+            for (int i = 0; i < num_threads; ++i) {
+                omp_init_lock(&row_locks[i]);
+            }
         }
-#pragma omp barrier
-        
+#pragma omp single
+        {
+            state = NOT_RUNNING;
+        }
+
         omp_set_nested(1);
 
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(NUM_THREADS)
             {
-                int args[3];
+                WorkerArg* arg;
                 int id = omp_get_thread_num();
-                args[0] = id * per_thread;
-                args[1] = args[0] + per_thread;
-                args[2] = id;
+                arg->first = id * per_thread;
+                arg->last = arg->first + per_thread;
+                arg->id = id;
                 
-                worker_func(args);
+                worker_func(arg);
             }
         }
     }
 };
 
 struct StatusHandler  : public Handler {
-    void handle() {
+    void handle(StateType& state) {
 #pragma omp master
         {
+            if (state == NOT_STARTED) {
+                cout << "The system has not yet started.";
+                return;
+            }
+            if (state == RUNNING) {
+                cout << "The system is still running. Try again.";
+                return;
+            }
+            
             cout << iter_number << endl;
-            for (int i = 0; i < FIELD_WIDTH; ++i) {
-                for (int j = 0; j < FIELD_HEIGHT; ++j) {
+            for (int i = 0; i < field_width; ++i) {
+                for (int j = 0; j < field_height; ++j) {
                     if (field[i][j]) {
                         cout << "*";
                     }
@@ -215,7 +206,7 @@ struct StatusHandler  : public Handler {
 };
 
 struct RunHandler  : public Handler {
-    void handle() {
+    void handle(StateType& state) {
         int iter_num;
 #pragma omp master
         {
@@ -228,15 +219,20 @@ struct RunHandler  : public Handler {
 #pragma omp master
         {
             omp_unset_lock(&run_lock);
+            state = RUNNING;
         }
     }
 };
 
 struct StopHandler  : public Handler {
-    void handle() {
+    void handle(StateType& state) {
 #pragma omp master
         {
-#pragma omp atomic
+            if (state == NOT_STARTED) {
+                cout << "The system has not yet started.";
+                return;
+            }
+#pragma omp critical(iter_todo)
             iter_todo = 0;
         }
 
@@ -244,14 +240,14 @@ struct StopHandler  : public Handler {
 };
 
 struct QuitHandler  : public Handler {
-    void handle() {
+    void handle(StateType& state) {
 #pragma omp master
         {
-#pramga omp atomic
+#pragma omp atomic
             break_work = true;
-        }
-//        pthread_join(master, NULL);
+            
         omp_destroy_lock(&run_lock);
+        }
         exit(EXIT_SUCCESS);
     }
 };
@@ -259,6 +255,7 @@ struct QuitHandler  : public Handler {
 struct LifeSolver
 {
     std::map<std::string, Handler*> handlers;
+    StateType state;
     
     LifeSolver() {
         handlers["START"] = new StartHandler();
@@ -269,20 +266,24 @@ struct LifeSolver
     }
     
     void run() {
+        state = NOT_STARTED;
         omp_init_lock(&run_lock);
         omp_init_lock(&go_work_lock);
+
 #pragma omp parallel num_threads(2)
-        while (true) {
-            cout << "$ ";
-            
-            string command;
-            
-            cin >> command;
-            if (handlers[command]) {
-                handlers[command]->handle();
-            }
-            else {
-                cout << "Wrong command\n";
+        {
+            while (true) {
+                cout << "$ ";
+                
+                string command;
+                
+                cin >> command;
+                if (handlers[command]) {
+                    handlers[command]->handle(state);
+                }
+                else {
+                    cout << "Wrong command\n";
+                }
             }
         }
         
@@ -354,18 +355,6 @@ int main(int argc, char *argv[])
 //    return 0;
 }
 
-void print_world()
-{
-    for (int i = 0; i < FIELD_WIDTH; ++i) {
-        for (int j = 0; j < FIELD_HEIGHT; ++j) {
-            if (field[i][j] == 1)
-                printf("*");
-            else
-                printf(" ");
-        }
-        printf("\n");
-    }
-}
 
 int count_live_neighbors(int x, int y) {
     unsigned int count = 0;
@@ -373,7 +362,7 @@ int count_live_neighbors(int x, int y) {
         for (int j = y - 1; j <= y + 1; ++j) {
             if (i == x && j == y)
                 continue;
-            if (prev_field[(i + FIELD_WIDTH) % FIELD_WIDTH][(j + FIELD_HEIGHT) % FIELD_HEIGHT]) {
+            if (prev_field[(i + field_width) % field_width][(j + field_height) % field_height]) {
                 count++;
             }
         }
@@ -383,7 +372,7 @@ int count_live_neighbors(int x, int y) {
 
 void copy_field(int first, int last) {
     for (int i = first; i < last; ++i) {
-        for (int j = 0; j < FIELD_HEIGHT; ++j) {
+        for (int j = 0; j < field_height; ++j) {
             prev_field[i][j] = field[i][j];
         }
     }
