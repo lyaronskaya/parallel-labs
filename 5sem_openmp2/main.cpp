@@ -227,12 +227,13 @@ struct RunHandler  : public Handler {
 
 struct StopHandler  : public Handler {
     void handle(StateType& state) {
+        if (state == NOT_STARTED) {
+#pragma omp master
+            cout << "The system has not yet started.";
+            return;
+        }
 #pragma omp master
         {
-            if (state == NOT_STARTED) {
-                cout << "The system has not yet started.";
-                return;
-            }
 #pragma omp critical(iter_todo)
             iter_todo = 0;
         }
@@ -304,15 +305,20 @@ int read_from_csv(string path, field_t& field) {
             {
                 if (s == "1" || s == "#")
                     field[i].push_back(1);
-                else {if (s == "0" || s == ".")
-                    field[i].push_back(0);
+                else {
+                    if (s == "0" || s == ".")
+                        field[i].push_back(0);
                 else {
                     throw IncorrectCommandException("Incorrect data. Use only 0 . 1 # ");
                 }
                 }
             }
-            for (auto x: field[i]) {
-                cout << x << " ";
+//            for (auto x: field[i]) {
+//                cout << x << " ";
+//            }
+            for (int j = 0; j < field_height; ++j) {
+                cout << field[i][j] << " ";
+
             }
             cout << "\n";
         }
