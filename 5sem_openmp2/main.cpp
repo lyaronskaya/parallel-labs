@@ -164,7 +164,7 @@ struct StartHandler : public Handler {
         omp_set_nested(1);
 
         if (omp_get_thread_num() == 1) {
-#pragma omp parallel num_threads(NUM_THREADS)
+#pragma omp parallel num_threads(num_threads)
             {
                 WorkerArg* arg;
                 int id = omp_get_thread_num();
@@ -180,17 +180,18 @@ struct StartHandler : public Handler {
 
 struct StatusHandler  : public Handler {
     void handle(StateType& state) {
+        if (state == NOT_STARTED) {
+#pragma omp master
+            cout << "The system has not yet started.";
+            return;
+        }
+        if (state == RUNNING) {
+#pragma omp master
+            cout << "The system is still running. Try again.";
+            return;
+        }
 #pragma omp master
         {
-            if (state == NOT_STARTED) {
-                cout << "The system has not yet started.";
-                return;
-            }
-            if (state == RUNNING) {
-                cout << "The system is still running. Try again.";
-                return;
-            }
-            
             cout << iter_number << endl;
             for (int i = 0; i < field_width; ++i) {
                 for (int j = 0; j < field_height; ++j) {
