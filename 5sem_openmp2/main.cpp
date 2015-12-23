@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <vector>
 #include <ctime>
-#include <libiomp/omp.h>
-//#include <omp.h>
+//#include <libiomp/omp.h>
+#include <omp.h>
 #include <stdio.h>
 #include <stdexcept>
 
