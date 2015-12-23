@@ -245,7 +245,7 @@ struct QuitHandler  : public Handler {
     void handle(StateType& state) {
 #pragma omp master
         {
-#pragma omp atomic
+#pragma omp critical(break_work)
             break_work = true;
             
         omp_destroy_lock(&run_lock);
