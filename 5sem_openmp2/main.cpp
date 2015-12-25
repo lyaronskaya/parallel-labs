@@ -274,16 +274,20 @@ struct LifeSolver
 
 #pragma omp parallel num_threads(2)
         {
+            string command;
             while (true) {
-                cout << "$ ";
-                
-                string command;
-                
-                cin >> command;
+#pragma omp master
+                {
+                    cout << "$ ";
+                    cin >> command;
+                }
+#pragma omp barrier
+
                 if (handlers[command]) {
                     handlers[command]->handle(state);
                 }
                 else {
+#pragma omp master
                     cout << "Wrong command\n";
                 }
             }
