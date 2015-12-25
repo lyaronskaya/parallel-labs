@@ -339,34 +339,8 @@ int read_from_csv(string path, field_t& field) {
 
 int main(int argc, char *argv[])
 {
-//    int n;
-//    
-//    omp_set_num_threads(10);
-//    cout << omp_get_max_threads();
-//#pragma omp parallel
-//    {
-//        n = 1;
-//        printf("%d\n", omp_get_max_threads() );
-//#pragma omp master
-//        {
-//            n = 2;
-//        }
-//        
-//        printf("Первое значение n: %d\n", n);
-//        
-//#pragma omp barrier
-//        
-//#pragma omp master
-//        {
-//            n = 3;
-//        }
-//        
-//        printf("Второе значение n: %d\n", n);
-//    }
-
     LifeSolver solver;
     solver.run();
-//    // "/Users/luba_yaronskaya/Documents/Parallel_5sem/Parallel_5sem/data/dataset.csv"
     return 0;
 }
 
