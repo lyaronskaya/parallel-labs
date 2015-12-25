@@ -178,7 +178,7 @@ struct StartHandler : public Handler {
     }
 };
 
-struct StatusHandler  : public Handler {
+struct StatusHandler : public Handler {
     void handle(StateType& state) {
         if (state == NOT_STARTED) {
 #pragma omp master
@@ -187,6 +187,10 @@ struct StatusHandler  : public Handler {
         }
         if (state == RUNNING) {
 #pragma omp master
+            if (iter_todo <= 0) {
+                state = NOT_RUNNING;
+                return;
+            }
             cout << "The system is still running. Try again.";
             return;
         }
@@ -206,7 +210,7 @@ struct StatusHandler  : public Handler {
     }
 };
 
-struct RunHandler  : public Handler {
+struct RunHandler : public Handler {
     void handle(StateType& state) {
         int iter_num;
 #pragma omp master
@@ -225,7 +229,7 @@ struct RunHandler  : public Handler {
     }
 };
 
-struct StopHandler  : public Handler {
+struct StopHandler : public Handler {
     void handle(StateType& state) {
         if (state == NOT_STARTED) {
 #pragma omp master
@@ -241,7 +245,7 @@ struct StopHandler  : public Handler {
     }
 };
 
-struct QuitHandler  : public Handler {
+struct QuitHandler : public Handler {
     void handle(StateType& state) {
 #pragma omp master
         {
