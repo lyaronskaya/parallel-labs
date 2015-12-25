@@ -126,11 +126,11 @@ struct StartHandler : public Handler {
 #pragma omp master
         {
             cin >> arg1;
-        
+            cout << "read arg1\n";
             try {
                 N = stoi(arg1);
                 cin >> M;
-            
+                cout << "read arg2\n";
                 field_width = N;
                 field_height = M;
                 field = vector<vector<int> >(field_width, vector<int>(field_height));
