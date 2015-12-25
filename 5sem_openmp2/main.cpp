@@ -85,8 +85,13 @@ void perform_field(int first, int last, int thread_id) {
 
 
 void worker_func(WorkerArg* arg) {
+#pragma omp critical
+    cout << "Started " << omp_get_thread_num() << endl;
+    
     while(true) {
         if (break_work) {
+#pragma omp critical
+            cout << "Ended " << omp_get_thread_num() << endl;
             return;
         }
         while (!omp_test_lock (&go_work_lock))
@@ -109,7 +114,8 @@ void worker_func(WorkerArg* arg) {
             iter_number++;
         }
     }
-    return;
+#pragma omp critical
+    cout << "Ended " << omp_get_thread_num() << endl;
 }
 
 struct Handler {
