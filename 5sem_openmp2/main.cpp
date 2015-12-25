@@ -185,12 +185,12 @@ struct StatusHandler : public Handler {
             cout << "The system has not yet started.";
             return;
         }
+        if (iter_todo <= 0) {
+#pragma omp master
+            state = NOT_RUNNING;
+        }
         if (state == RUNNING) {
 #pragma omp master
-            if (iter_todo <= 0) {
-                state = NOT_RUNNING;
-                return;
-            }
             cout << "The system is still running. Try again.";
             return;
         }
