@@ -126,11 +126,9 @@ struct StartHandler : public Handler {
 #pragma omp master
         {
             cin >> arg1;
-            cout << "read arg1\n";
             try {
                 N = stoi(arg1);
                 cin >> M;
-                cout << "read arg2\n";
                 field_width = N;
                 field_height = M;
                 field = vector<vector<int> >(field_width, vector<int>(field_height));
@@ -182,7 +180,7 @@ struct StatusHandler : public Handler {
     void handle(StateType& state) {
         if (state == NOT_STARTED) {
 #pragma omp master
-            cout << "The system has not yet started.";
+            cout << "The system has not yet started.\n";
             return;
         }
         if (iter_todo <= 0) {
@@ -191,7 +189,7 @@ struct StatusHandler : public Handler {
         }
         if (state == RUNNING) {
 #pragma omp master
-            cout << "The system is still running. Try again.";
+            cout << iter_todo << " The system is still running. Try again.\n";
             return;
         }
 #pragma omp master
@@ -233,7 +231,7 @@ struct StopHandler : public Handler {
     void handle(StateType& state) {
         if (state == NOT_STARTED) {
 #pragma omp master
-            cout << "The system has not yet started.";
+            cout << "The system has not yet started.\n";
             return;
         }
 #pragma omp master
