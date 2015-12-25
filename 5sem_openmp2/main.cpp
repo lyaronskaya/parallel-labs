@@ -103,7 +103,7 @@ void worker_func(WorkerArg* arg) {
                 copy_field(locked_line_num, locked_line_num + 1);
             }
         }
-#pragma omp single copyprivate(iter_todo, iter_number)
+#pragma omp single //copyprivate(iter_todo, iter_number)
         {
             iter_todo--;
             iter_number++;
