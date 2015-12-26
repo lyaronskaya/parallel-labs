@@ -284,7 +284,7 @@ struct LifeSolver
 #pragma omp parallel num_threads(2)
         {
             string command;
-            
+            cout << omp_get_num_threads() << endl;
             while (true) {
 #pragma omp master
                 {
