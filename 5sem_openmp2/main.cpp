@@ -164,6 +164,8 @@ struct StartHandler : public Handler {
         {
             state = NOT_RUNNING;
         }
+        
+        cout << omp_get_thread_num() << endl;
 
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(num_threads)
