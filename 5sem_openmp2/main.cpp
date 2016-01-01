@@ -170,6 +170,7 @@ struct StartHandler : public Handler {
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
             {
+                cout << omp_in_parallel() << endl;
                 WorkerArg* arg;
                 int id = omp_get_thread_num();
                 arg->first = id * per_thread;
