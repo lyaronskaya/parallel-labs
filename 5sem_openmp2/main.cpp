@@ -129,6 +129,7 @@ struct StartHandler : public Handler {
         
         string arg1, file_name;
         int N, M, per_thread;
+        cout << "start\n";
 #pragma omp master
         {
             cin >> arg1;
