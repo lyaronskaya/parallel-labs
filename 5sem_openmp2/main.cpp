@@ -166,9 +166,9 @@ struct StartHandler : public Handler {
         }
         
         cout << omp_get_thread_num() << endl;
-
+        omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
-#pragma omp parallel num_threads(num_threads)
+#pragma omp parallel num_threads(2)
             {
                 WorkerArg* arg;
                 int id = omp_get_thread_num();
@@ -279,7 +279,7 @@ struct LifeSolver
         state = NOT_STARTED;
         omp_init_lock(&run_lock);
         omp_init_lock(&go_work_lock);
-        omp_set_nested(0);
+        omp_set_nested(1);
         
 #pragma omp parallel num_threads(2)
         {
