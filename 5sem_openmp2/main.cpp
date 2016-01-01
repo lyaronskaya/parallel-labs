@@ -279,7 +279,7 @@ struct LifeSolver
         state = NOT_STARTED;
         omp_init_lock(&run_lock);
         omp_init_lock(&go_work_lock);
-        omp_set_nested(1);
+        omp_set_nested(0);
         
 #pragma omp parallel num_threads(2)
         {
