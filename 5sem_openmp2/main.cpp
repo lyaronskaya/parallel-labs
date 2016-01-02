@@ -167,7 +167,7 @@ struct StartHandler : public Handler {
         }
         
 #pragma omp critical
-        cout << "thread_num " << omp_get_thread_num() << endl;
+        cout << "thread_num in start " << omp_get_thread_num() << endl;
         omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
