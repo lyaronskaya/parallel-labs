@@ -295,7 +295,11 @@ struct LifeSolver
                     cin >> command;
                 }
 #pragma omp barrier
+#pragma omp critical
+                {
                 cout << "thread_num " << omp_get_thread_num() << endl;
+                cout << handlers[command] << endl;
+                }
                 if (handlers[command]) {
                     handlers[command]->handle(state);
                 }
