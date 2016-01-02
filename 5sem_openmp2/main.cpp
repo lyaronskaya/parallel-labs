@@ -165,7 +165,7 @@ struct StartHandler : public Handler {
         {
             state = NOT_RUNNING;
         }
-        
+        cout << "thread_num in start before critical" << omp_get_thread_num() << endl;
 #pragma omp critical
         cout << "thread_num in start " << omp_get_thread_num() << endl;
         omp_set_nested(1);
