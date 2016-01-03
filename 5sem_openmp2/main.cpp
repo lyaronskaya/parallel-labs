@@ -177,7 +177,6 @@ struct StartHandler : public Handler {
                 worker_func(arg);
             }
         }
-#pragma omp barrier
     }
 };
 
