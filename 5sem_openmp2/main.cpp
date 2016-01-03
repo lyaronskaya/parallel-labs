@@ -165,21 +165,18 @@ struct StartHandler : public Handler {
         {
             state = NOT_RUNNING;
         }
-        cout << "thread_num in start before critical" << omp_get_thread_num() << endl;
-#pragma omp critical
-        cout << "thread_num in start " << omp_get_thread_num() << endl;
+        cout << "thread_num in start before create workers " << omp_get_thread_num() << endl;
         omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
             {
-                cout << omp_in_parallel() << endl;
                 WorkerArg* arg;
                 int id = omp_get_thread_num();
                 arg->first = id * per_thread;
                 arg->last = arg->first + per_thread;
                 arg->id = id;
                 cout << "create worker " << id << endl;
-                worker_func(arg);
+//                worker_func(arg);
             }
         }
     }
