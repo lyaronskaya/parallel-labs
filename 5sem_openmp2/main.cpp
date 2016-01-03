@@ -22,9 +22,7 @@ int num_threads;
 int per_thread;
 int field_width, field_height;
 bool break_work = false;
-omp_lock_t run_lock;
 omp_lock_t go_work_lock;
-omp_lock_t iter_ready;
 vector<omp_lock_t> row_locks;
 
 int iter_number, iter_todo;
@@ -109,13 +107,13 @@ void worker_func(WorkerArg* arg) {
                 copy_field(locked_line_num, locked_line_num + 1);
             }
         }
-#pragma omp single
+#pragma omp master
         {
             cout << "decrease\n";
             iter_todo--;
             iter_number++;
-            if (iter_todo < 0) {
-                
+            if (iter_todo <= 0) {
+                omp_set_lock(&go_work_lock);
             }
         }
     }
@@ -162,7 +160,7 @@ struct StartHandler : public Handler {
             for (int i = 0; i < num_threads; ++i) {
                 omp_init_lock(&row_locks[i]);
             }
-            omp_unset_lock(&run_lock);
+            omp_set_lock(&go_work_lock);
         }
 #pragma omp single
         {
@@ -227,7 +225,7 @@ struct RunHandler : public Handler {
         }
 #pragma omp master
         {
-            omp_unset_lock(&run_lock);
+//            omp_unset_lock(&run_lock);
             state = RUNNING;
         }
     }
@@ -242,8 +240,8 @@ struct StopHandler : public Handler {
         }
 #pragma omp master
         {
-#pragma omp critical(iter_todo)
-            iter_todo = 0;
+#pragma omp atomic
+            iter_todo &= 0;
         }
 
     }
@@ -255,8 +253,10 @@ struct QuitHandler : public Handler {
         {
 #pragma omp atomic
             break_work &= 1;
-            
-        omp_destroy_lock(&run_lock);
+            for (int i = 0; i < num_threads; i++) {
+                omp_destroy_lock(&row_locks[i]);
+            }
+        omp_destroy_lock(&go_work_lock);
         }
         exit(EXIT_SUCCESS);
     }
