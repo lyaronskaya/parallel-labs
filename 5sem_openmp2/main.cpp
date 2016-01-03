@@ -171,7 +171,7 @@ struct StartHandler : public Handler {
             {
                 WorkerArg* arg;
                 int id = omp_get_thread_num();
-//                arg->first = id * per_thread;
+                arg->first = id * per_thread;
 //                arg->last = arg->first + per_thread;
 //                arg->id = id;
                 cout << per_thread << endl;
