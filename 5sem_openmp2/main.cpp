@@ -129,7 +129,7 @@ struct StartHandler : public Handler {
     void handle(StateType& state) {
         
         cout << "start\n";
-#pragma omp master 
+#pragma omp master
         {
             string arg1, file_name;
             cin >> arg1;
@@ -169,11 +169,11 @@ struct StartHandler : public Handler {
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
             {
-                WorkerArg* arg;
-                int id = omp_get_thread_num();
-                arg->first = id * per_thread;
-                arg->last = arg->first + per_thread;
-                arg->id = id;
+//                WorkerArg* arg;
+//                int id = omp_get_thread_num();
+//                arg->first = id * per_thread;
+//                arg->last = arg->first + per_thread;
+//                arg->id = id;
                 cout << id << endl;
 //                worker_func(arg);
             }
