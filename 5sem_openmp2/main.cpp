@@ -172,10 +172,9 @@ struct StartHandler : public Handler {
                 WorkerArg* arg = new WorkerArg;
                 int id = omp_get_thread_num();
                 arg->first = id * per_thread;
-//                arg->last = arg->first + per_thread;
-//                arg->id = id;
-                cout << per_thread << endl;
-//                worker_func(arg);
+                arg->last = arg->first + per_thread;
+                arg->id = id;
+                worker_func(arg);
             }
         }
 #pragma omp barrier
