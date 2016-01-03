@@ -289,8 +289,6 @@ struct LifeSolver
                     cout << "$ ";
                     cin >> command;
                 }
-                if (command == "START")
-#pragma omp barrier
 
                 if (handlers[command]) {
                     handlers[command]->handle(state);
