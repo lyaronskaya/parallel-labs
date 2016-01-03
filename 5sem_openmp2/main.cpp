@@ -114,6 +114,9 @@ void worker_func(WorkerArg* arg) {
             cout << "decrease\n";
             iter_todo--;
             iter_number++;
+            if (iter_todo < 0) {
+                
+            }
         }
     }
 #pragma omp critical
@@ -130,7 +133,6 @@ struct StartHandler : public Handler {
     void handle(StateType& state) {
         
         cout << "start\n";
-        cout << "iter_number " << iter_number << endl;
 #pragma omp master
         {
             string arg1, file_name;
@@ -160,6 +162,7 @@ struct StartHandler : public Handler {
             for (int i = 0; i < num_threads; ++i) {
                 omp_init_lock(&row_locks[i]);
             }
+            omp_unset_lock(&run_lock);
         }
 #pragma omp single
         {
@@ -220,10 +223,7 @@ struct RunHandler : public Handler {
 #pragma omp master
         {
             cin >> iter_num;
-#pragma omp critical(iter_todo)
-            {
-                iter_todo += iter_num;
-            }
+            iter_todo += iter_num;
         }
 #pragma omp master
         {
@@ -253,8 +253,8 @@ struct QuitHandler : public Handler {
     void handle(StateType& state) {
 #pragma omp master
         {
-#pragma omp critical(break_work)
-            break_work = true;
+#pragma omp atomic
+            break_work &= 1;
             
         omp_destroy_lock(&run_lock);
         }
