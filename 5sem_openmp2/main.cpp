@@ -166,6 +166,7 @@ struct StartHandler : public Handler {
             state = NOT_RUNNING;
         }
         cout << "thread_num in start before create workers " << omp_get_thread_num() << endl;
+        cout << "per thread " << per_thread << endl;
         omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
@@ -179,6 +180,7 @@ struct StartHandler : public Handler {
 //                worker_func(arg);
             }
         }
+#pragma omp barrier
     }
 };
 
