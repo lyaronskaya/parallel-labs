@@ -175,7 +175,7 @@ struct StartHandler : public Handler {
                 arg->first = id * per_thread;
                 arg->last = arg->first + per_thread;
                 arg->id = id;
-                cout << "create worker " << id << endl;
+                cout << "create " << id << endl;
 //                worker_func(arg);
             }
         }
