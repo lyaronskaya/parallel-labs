@@ -283,10 +283,10 @@ struct LifeSolver
         omp_init_lock(&run_lock);
         omp_init_lock(&go_work_lock);
         omp_set_nested(1);
+        string command;
         
 #pragma omp parallel num_threads(2)
         {
-            string command;
             cout << omp_get_num_threads() << endl;
             while (true) {
 #pragma omp master
