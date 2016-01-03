@@ -102,8 +102,8 @@ void worker_func(WorkerArg* arg) {
 #pragma omp master
         {
             
-            while (iter_todo <= 0)
-                cout << "iter todo <=0\n";
+            while (iter_todo <= 0);
+//                cout << "iter todo <=0\n";
             omp_unset_lock(&go_work_lock);
         }
         while (!omp_test_lock (&go_work_lock))
