@@ -174,7 +174,7 @@ struct StartHandler : public Handler {
             for (int i = 0; i < num_threads; ++i) {
                 omp_init_lock(&row_locks[i]);
             }
-            omp_set_lock(&go_work_lock);
+//            omp_set_lock(&go_work_lock);
         }
 #pragma omp single
         {
