@@ -282,7 +282,7 @@ struct LifeSolver
         
 #pragma omp parallel num_threads(2)
         {
-            cout << iter_number << iter_ready << endl;
+            cout << iter_number << endl;
             while (true) {
 #pragma omp master
                 {
