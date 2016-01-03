@@ -298,7 +298,7 @@ struct LifeSolver
 #pragma omp critical
                 {
                 cout << "thread_num " << omp_get_thread_num() << endl;
-                cout << "command count " << handlers.size() << endl;
+                cout << "command count " << command << endl;
                 }
                 if (handlers[command]) {
                     handlers[command]->handle(state);
