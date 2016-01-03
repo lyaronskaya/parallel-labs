@@ -277,7 +277,6 @@ struct LifeSolver
     
     void run() {
         state = NOT_STARTED;
-        omp_init_lock(&run_lock);
         omp_init_lock(&go_work_lock);
         omp_set_nested(1);
         string command;
