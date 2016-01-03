@@ -19,6 +19,7 @@ typedef vector<vector<int> > field_t;
 field_t field;
 field_t prev_field;
 int num_threads;
+int per_thread;
 int field_width, field_height;
 bool break_work = false;
 omp_lock_t run_lock;
@@ -127,7 +128,6 @@ struct StartHandler : public Handler {
     
     void handle(StateType& state) {
         
-        int per_thread;
         cout << "start\n";
 #pragma omp master copyprivate(per_thread)
         {
