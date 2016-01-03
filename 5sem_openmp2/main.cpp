@@ -108,7 +108,7 @@ void worker_func(WorkerArg* arg) {
                 copy_field(locked_line_num, locked_line_num + 1);
             }
         }
-#pragma omp single //copyprivate(iter_todo, iter_number)
+#pragma omp single
         {
             iter_todo--;
             iter_number++;
@@ -127,21 +127,19 @@ struct StartHandler : public Handler {
     
     void handle(StateType& state) {
         
-        string arg1, file_name;
-        int N, M, per_thread;
+        int per_thread;
         cout << "start\n";
-#pragma omp master
+#pragma omp master copyprivate(per_thread)
         {
+            string arg1, file_name;
             cin >> arg1;
             try {
-                N = stoi(arg1);
-                cin >> M;
-                field_width = N;
-                field_height = M;
+                field_width = stoi(arg1);
+                cin >> field_height;
                 field = vector<vector<int> >(field_width, vector<int>(field_height));
             
-                for (int i = 0; i < N; ++i) {
-                    for (int j = 0; j < M; ++j) {
+                for (int i = 0; i < field_width; ++i) {
+                    for (int j = 0; j < field_height; ++j) {
                         field[i][j] = rand() % 2;
                     }
                 }
@@ -176,7 +174,7 @@ struct StartHandler : public Handler {
                 arg->first = id * per_thread;
                 arg->last = arg->first + per_thread;
                 arg->id = id;
-                cout << "create " << id << endl;
+                cout << id << endl;
 //                worker_func(arg);
             }
         }
