@@ -282,7 +282,7 @@ struct LifeSolver
         
 #pragma omp parallel num_threads(2)
         {
-            cout << omp_get_num_threads() << endl;
+            cout << iter_number << iter_ready << endl;
             while (true) {
 #pragma omp master
                 {
@@ -324,9 +324,6 @@ int read_from_csv(string path, field_t& field) {
                 }
                 }
             }
-//            for (auto x: field[i]) {
-//                cout << x << " ";
-//            }
             for (int j = 0; j < field_height; ++j) {
                 cout << field[i][j] << " ";
 
