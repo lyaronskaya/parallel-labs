@@ -111,6 +111,7 @@ void worker_func(WorkerArg* arg) {
         }
 #pragma omp single
         {
+            cout << "decrease\n";
             iter_todo--;
             iter_number++;
         }
