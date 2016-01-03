@@ -289,12 +289,9 @@ struct LifeSolver
                     cout << "$ ";
                     cin >> command;
                 }
+                if (command == "START")
 #pragma omp barrier
-#pragma omp critical
-                {
-                cout << "thread_num " << omp_get_thread_num() << endl;
-                cout << "command count " << command << endl;
-                }
+
                 if (handlers[command]) {
                     handlers[command]->handle(state);
                 }
