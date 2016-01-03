@@ -129,6 +129,7 @@ struct StartHandler : public Handler {
     void handle(StateType& state) {
         
         cout << "start\n";
+        cout << "iter_number " << iter_number << endl;
 #pragma omp master
         {
             string arg1, file_name;
