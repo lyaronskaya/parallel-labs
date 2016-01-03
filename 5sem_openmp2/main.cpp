@@ -86,12 +86,24 @@ void perform_field(int first, int last, int thread_id) {
 void worker_func(WorkerArg* arg) {
 #pragma omp critical
     cout << "Started " << omp_get_thread_num() << endl;
-    
+#pragma omp master
+    {
+        cout << "master\n";
+        if (iter_todo <= 0) {
+            omp_set_lock(&go_work_lock);
+        }
+    }
     while(true) {
         if (break_work) {
 #pragma omp critical
             cout << "Ended " << omp_get_thread_num() << endl;
             return;
+        }
+#pragma omp master
+        {
+            
+            while (iter_todo <= 0);
+            omp_unset_lock(&go_work_lock);
         }
         while (!omp_test_lock (&go_work_lock))
             sleep(2);
@@ -116,6 +128,7 @@ void worker_func(WorkerArg* arg) {
                 omp_set_lock(&go_work_lock);
             }
         }
+#pragma omp barrier
     }
 #pragma omp critical
     cout << "Ended " << omp_get_thread_num() << endl;
