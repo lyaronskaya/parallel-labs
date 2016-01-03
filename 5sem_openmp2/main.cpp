@@ -129,7 +129,7 @@ struct StartHandler : public Handler {
     void handle(StateType& state) {
         
         cout << "start\n";
-#pragma omp master copyprivate(per_thread)
+#pragma omp master 
         {
             string arg1, file_name;
             cin >> arg1;
