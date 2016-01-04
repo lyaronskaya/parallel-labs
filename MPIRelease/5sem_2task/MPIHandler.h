@@ -30,6 +30,7 @@ struct StartHandler : public Handler {
         
         try {
             int w = stoi(field_info), h;
+            cout << w << endl;
             cin >> h;
             int temp;
             cin >> temp;
