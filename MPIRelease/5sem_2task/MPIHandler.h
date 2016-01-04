@@ -33,6 +33,7 @@ struct StartHandler : public Handler {
             master->life_field->init_random(w, h);
         }
         catch(...) {
+            cerr << "init from file\n";
             master->life_field->init_from_file(field_info);
         }
         cout << "Master starts init workers\n";
