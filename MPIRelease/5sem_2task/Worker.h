@@ -72,7 +72,6 @@ void Worker::worker_function(int rank, int comm_size) {
              0, FIELD_INIT, MPI_COMM_WORLD);
     
     while(true) {
-        break;
         bool curr_status = check_break_work();
         if (curr_status)
             break;
@@ -149,7 +148,7 @@ bool Worker::check_break_work() {
                 return true;
             }
             iterations_todo += 2;
-            for (int i = 2; i < workersCount; ++i) {
+            for (int i = 2; i <= workersCount; ++i) {
                 bool iteration_buf[field_height];
                 boolarray_from_int(iterations_ready, iteration_buf, field_height);
                 MPI_Send(iteration_buf, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
