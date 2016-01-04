@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     }
     
     if (rank == 0) {
-        MPILifeSolver solver;
+        MPILifeSolver solver = MPILifeSolver();
         solver.run(size);
     } else {
         Worker worker;
