@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>35A5BD1B-2FBB-4D49-A3C3-27531B90654A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>5sem_2task</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>71B9F132C40B058CEF158A5C20C8F82F8724D632</key>
+		<string>https://github.com/lyaronskaya/parallel-labs.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MPIRelease/5sem_2task.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>71B9F132C40B058CEF158A5C20C8F82F8724D632</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lyaronskaya/parallel-labs.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>71B9F132C40B058CEF158A5C20C8F82F8724D632</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>71B9F132C40B058CEF158A5C20C8F82F8724D632</string>
+			<key>IDESourceControlWCCName</key>
+			<string>5sem_openmp2</string>
+		</dict>
+	</array>
+</dict>
+</plist>
