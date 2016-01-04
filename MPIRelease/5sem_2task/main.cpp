@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
     }
  
     int i= (rank+1)*5;
+    cout << i << endl;
     bool* buf = new bool[2];
 //    printf("\nBefore sending: i= %d on %d\n", i, rank);
     if (rank==0) {
