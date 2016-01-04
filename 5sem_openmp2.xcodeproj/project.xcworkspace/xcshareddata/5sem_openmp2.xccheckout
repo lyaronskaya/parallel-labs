@@ -20,7 +20,7 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4BD75C932C5424A5B785A1AA6753C6815D11E34A</key>
-		<string>../../../../llvm</string>
+		<string>../../../llvm</string>
 		<key>71B9F132C40B058CEF158A5C20C8F82F8724D632</key>
 		<string>../..</string>
 	</dict>

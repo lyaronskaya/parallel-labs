@@ -42,7 +42,7 @@ private:
 };
 
 void Worker::worker_function(int rank, int comm_size) {
-    cout << "worker " << rank << "Started ";
+//    cout << "worker " << rank << "Started ";
     id = rank;
     workersCount = comm_size - 1;
     iterations_todo = 0;
@@ -67,8 +67,12 @@ void Worker::worker_function(int rank, int comm_size) {
     bool* higher_row_send = new bool[field_height];
     bool* lower_row_receive = new bool[field_height];
     bool* higher_row_receive = new bool[field_height];
+    bool answer = true;
+    MPI_Send(&answer, 1, MPI::BOOL,
+             0, FIELD_INIT, MPI_COMM_WORLD);
     
     while(true) {
+        break;
         bool curr_status = check_break_work();
         if (curr_status)
             break;
