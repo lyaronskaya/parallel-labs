@@ -28,6 +28,7 @@ private:
     int workersCount;
     Field* field;
     Field* prev_field;
+    Worker() {field = new Field; prev_field = new Field; }
     bool* field_buffer;
     int field_height;
     int field_width;

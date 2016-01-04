@@ -25,8 +25,7 @@ private:
     int iterNumber;
     
 public:
-    int temp;
-    Master() : state(NOT_STARTED) { life_field = new Field; temp = 1; }
+    Master() : state(NOT_STARTED) { life_field = new Field; }
     void init_workers();
     void run_workers(int iterations);
     void stop_workers();
@@ -52,6 +51,7 @@ void Master::init_workers() {
     field_buffer = new bool[life_field->width * life_field->height];
     worker_arg[0] = life_field->width / workersCount;
     worker_arg[1] = life_field->height;
+    cout << worker_arg[0] << " " << worker_arg[2] << " " << workersCount << endl;
     int start_row = 0;
     
     for (int i = 0; i < workersCount; ++i) {
