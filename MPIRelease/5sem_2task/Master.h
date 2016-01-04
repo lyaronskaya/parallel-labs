@@ -63,9 +63,10 @@ void Master::init_workers() {
         MPI_Send(worker_arg, 2, MPI::INT, i, FIELD_INFO, MPI_COMM_WORLD);
         MPI_Send(field_buffer, worker_arg[0] * life_field->height, MPI::BOOL,
                  i, FIELD_INIT, MPI_COMM_WORLD);
-        bool answer[1];
+        cout << "sended info\n";
+        bool* answer = new bool[1];
         MPI_Status status;
-        MPI_Recv(&answer, 1, MPI::BOOL, i, FIELD_INIT, MPI_COMM_WORLD, &status);
+        MPI_Recv(answer, 1, MPI::BOOL, i, FIELD_INIT, MPI_COMM_WORLD, &status);
         cout << "answer " << answer[0] << endl;
         start_row += worker_arg[0];
     }
