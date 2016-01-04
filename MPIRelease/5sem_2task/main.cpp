@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
         solver.run(size);
     } else {
         Worker worker;
-        worker.worker_function(rank, size);
+//        worker.worker_function(rank, size);
     }
 //
 ////    printf("\nBefore sending: i= %d on %d\n", i, rank);
