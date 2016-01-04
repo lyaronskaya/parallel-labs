@@ -54,8 +54,8 @@ void Master::init_workers() {
     cout << worker_arg[0] << " " << worker_arg[2] << " " << workersCount << endl;
     int start_row = 0;
     
-    for (int i = 0; i < workersCount; ++i) {
-        if (i == workersCount - 1) {
+    for (int i = 1; i <= workersCount; ++i) {
+        if (i == workersCount) {
             worker_arg[0] += life_field->width % workersCount;
         }
         life_field->write_to_buffer(field_buffer, start_row, worker_arg[0]);
@@ -124,7 +124,7 @@ void Master::stop_workers() {
 
 void Master::shutdown() {
     int some_message = 0;
-    for (int i = 0; i < workersCount; ++i) {
+    for (int i = 1; i <= workersCount; ++i) {
         MPI_Send(&some_message, 1, MPI::INT, i, FINISH, MPI_COMM_WORLD);
     }
     state = FINISHED;
