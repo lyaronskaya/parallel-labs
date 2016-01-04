@@ -41,7 +41,7 @@ private:
 };
 
 void Worker::worker_function(int rank, int comm_size) {
-//    cout << "worker " << rank << "Started ";
+    cout << "worker " << rank << "Started ";
     id = rank;
     workersCount = comm_size - 1;
     iterations_todo = 0;

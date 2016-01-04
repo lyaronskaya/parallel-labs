@@ -88,6 +88,7 @@ struct QuitHandler : public Handler {
     void handle(void* arg) {
         Master* master = (Master*)arg;
         master->shutdown();
+        MPI_Finalize();
         exit(EXIT_SUCCESS);
     }
 };
