@@ -86,18 +86,18 @@ void perform_field(int first, int last, int thread_id) {
 
 void worker_func(WorkerArg* arg) {
 #pragma omp critical
-    cout << "Started " << omp_get_thread_num() << endl;
+//    cout << "Started " << omp_get_thread_num() << endl;
 #pragma omp master
     {
-        cout << "master\n";
+//        cout << "master\n";
         if (iter_todo <= 0) {
             omp_set_lock(&go_work_lock);
         }
     }
     while(true) {
         if (break_work) {
-#pragma omp critical
-            cout << "Ended " << omp_get_thread_num() << endl;
+//#pragma omp critical
+//            cout << "Ended " << omp_get_thread_num() << endl;
             return;
         }
 #pragma omp master
@@ -123,7 +123,7 @@ void worker_func(WorkerArg* arg) {
         }
 #pragma omp master
         {
-            cout << "decrease\n";
+//            cout << "decrease\n";
             iter_todo--;
             iter_number++;
             if (iter_todo <= 0) {
@@ -132,8 +132,8 @@ void worker_func(WorkerArg* arg) {
         }
 #pragma omp barrier
     }
-#pragma omp critical
-    cout << "Ended " << omp_get_thread_num() << endl;
+//#pragma omp critical
+//    cout << "Ended " << omp_get_thread_num() << endl;
 }
 
 struct Handler {
@@ -145,7 +145,7 @@ struct StartHandler : public Handler {
     
     void handle(StateType& state) {
         
-        cout << "start\n";
+//        cout << "start\n";
 #pragma omp master
         {
             string arg1, file_name;
@@ -181,8 +181,8 @@ struct StartHandler : public Handler {
         {
             state = NOT_RUNNING;
         }
-        cout << "thread_num in start before create workers " << omp_get_thread_num() << endl;
-        cout << "per thread " << per_thread << endl;
+//        cout << "thread_num in start before create workers " << omp_get_thread_num() << endl;
+//        cout << "per thread " << per_thread << endl;
         omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
 #pragma omp parallel num_threads(2)
@@ -200,10 +200,10 @@ struct StartHandler : public Handler {
 
 struct StatusHandler : public Handler {
     void handle(StateType& state) {
-#pragma omp master
-        {
-        cout << iter_todo << endl;
-        }
+//#pragma omp master
+//        {
+//        cout << iter_todo << endl;
+//        }
         if (state == NOT_STARTED) {
 #pragma omp master
             cout << "The system has not yet started.\n";
@@ -305,7 +305,6 @@ struct LifeSolver
         
 #pragma omp parallel num_threads(2)
         {
-            cout << iter_number << endl;
             while (true) {
 #pragma omp master
                 {
