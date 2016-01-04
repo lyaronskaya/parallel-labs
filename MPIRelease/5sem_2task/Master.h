@@ -25,7 +25,8 @@ private:
     int iterNumber;
     
 public:
-    Master() : state(NOT_STARTED) { life_field = new Field; }
+    int temp;
+    Master() : state(NOT_STARTED) { life_field = new Field; temp = 1; }
     void init_workers();
     void run_workers(int iterations);
     void stop_workers();

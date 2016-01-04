@@ -30,7 +30,7 @@ struct StartHandler : public Handler {
         try {
             int w = stoi(field_info), h;
             cin >> h;
-            cout << master->state << endl;
+            cout << master->temp << endl;
             master->life_field->init_random(w, h);
             cout << "init random ended\n";
         }
