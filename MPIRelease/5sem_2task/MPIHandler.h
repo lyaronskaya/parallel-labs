@@ -21,7 +21,7 @@ using namespace std;
 
 struct StartHandler : public Handler {
     void handle(void* arg) {
-        cout << "start command\n";
+//        cout << "start command\n";
         Master* master = (Master*)arg;
         std::string field_info;
         
