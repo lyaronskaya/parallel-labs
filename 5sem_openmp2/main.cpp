@@ -23,6 +23,7 @@ int per_thread;
 int field_width, field_height;
 bool break_work = false;
 omp_lock_t go_work_lock;
+omp_lock_t iter_lock;
 vector<omp_lock_t> row_locks;
 
 int iter_number, iter_todo;
@@ -199,6 +200,10 @@ struct StartHandler : public Handler {
 
 struct StatusHandler : public Handler {
     void handle(StateType& state) {
+#pragma omp master
+        {
+        cout << iter_todo << endl;
+        }
         if (state == NOT_STARTED) {
 #pragma omp master
             cout << "The system has not yet started.\n";
@@ -235,7 +240,9 @@ struct RunHandler : public Handler {
 #pragma omp master
         {
             cin >> iter_num;
+            omp_set_lock(&iter_lock);
             iter_todo += iter_num;
+            omp_unset_lock(&iter_lock);
         }
 #pragma omp master
         {
@@ -292,6 +299,7 @@ struct LifeSolver
     void run() {
         state = NOT_STARTED;
         omp_init_lock(&go_work_lock);
+        omp_init_lock(&iter_lock);
         omp_set_nested(1);
         string command;
         
