@@ -35,7 +35,7 @@ void MPILifeSolver::run(int size) {
         cin >> command;
 //        cout << "end read command\n";
         if (handlers[command]) {
-            handlers[command]->handle(&master);
+            handlers[command]->handle(master);
         }
         else {
             cout << "Wrong command\n";
