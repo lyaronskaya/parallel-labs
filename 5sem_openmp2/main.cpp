@@ -86,7 +86,7 @@ void perform_field(int first, int last, int thread_id) {
 
 void worker_func(WorkerArg* arg) {
 #pragma omp critical
-    cout << "Started " << omp_get_thread_num() << endl;
+//    cout << "Started " << omp_get_thread_num() << endl;
 #pragma omp master
     {
 //        cout << "master\n";
