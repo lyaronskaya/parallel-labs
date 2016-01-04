@@ -1,6 +1,7 @@
 #ifndef CommandException_h
 #define CommandException_h
 
+#include <stdexcept>
 #include <string>
 
 using namespace std;
