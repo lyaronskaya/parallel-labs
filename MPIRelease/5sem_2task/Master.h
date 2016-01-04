@@ -65,7 +65,7 @@ void Master::init_workers() {
                  i, FIELD_INIT, MPI_COMM_WORLD);
         bool answer[1];
         MPI_Status status;
-        MPI_Recv(&answer, 1, MPI::BOOL, 0, FIELD_INIT, MPI_COMM_WORLD, &status);
+        MPI_Recv(&answer, 1, MPI::BOOL, i, FIELD_INIT, MPI_COMM_WORLD, &status);
         cout << "answer " << answer[0] << endl;
         start_row += worker_arg[0];
     }
