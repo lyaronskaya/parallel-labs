@@ -26,15 +26,12 @@ struct StartHandler : public Handler {
         std::string field_info;
         
         cin >> field_info;
-        cout << field_info << endl;
         
         try {
             int w = stoi(field_info), h;
-            cout << w << endl;
             cin >> h;
-            int temp;
-            cin >> temp;
             master->life_field->init_random(w, h);
+            cout << "init random ended\n";
         }
         catch(...) {
             cerr << "init from file\n";
