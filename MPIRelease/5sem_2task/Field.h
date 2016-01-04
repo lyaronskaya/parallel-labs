@@ -53,7 +53,7 @@ void Field::init_from_file(string file) {
                 else {if (s == "0" || s == ".")
                     data[i].push_back(0);
                 else {
-//                    throw IncorrectCommandException("Incorrect data. Use only 0 . 1 # ");
+                    throw IncorrectCommandException("Incorrect data. Use only 0 . 1 # ");
                 }
                 }
             }

@@ -26,6 +26,7 @@ struct StartHandler : public Handler {
         std::string field_info;
         
         cin >> field_info;
+        cout << field_info << endl;
         
         try {
             int w = stoi(field_info), h;
