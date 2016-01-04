@@ -30,6 +30,8 @@ struct StartHandler : public Handler {
         try {
             int w = stoi(field_info), h;
             cin >> h;
+            int temp;
+            cin >> temp;
             master->life_field->init_random(w, h);
         }
         catch(...) {
