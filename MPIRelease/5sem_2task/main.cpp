@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "mpi.h"
-//#include "MPILifeSolver.h"
+#include "MPILifeSolver.h"
 //#include <mpi.h>
 #define mymessage 99
 //
