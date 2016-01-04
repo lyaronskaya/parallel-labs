@@ -86,7 +86,7 @@ void perform_field(int first, int last, int thread_id) {
 
 void worker_func(WorkerArg* arg) {
 #pragma omp critical
-//    cout << "Started " << omp_get_thread_num() << endl;
+    cout << "Started " << omp_get_thread_num() << endl;
 #pragma omp master
     {
 //        cout << "master\n";
@@ -175,7 +175,6 @@ struct StartHandler : public Handler {
             for (int i = 0; i < num_threads; ++i) {
                 omp_init_lock(&row_locks[i]);
             }
-//            omp_set_lock(&go_work_lock);
         }
 #pragma omp single
         {
@@ -185,7 +184,7 @@ struct StartHandler : public Handler {
 //        cout << "per thread " << per_thread << endl;
         omp_set_nested(1);
         if (omp_get_thread_num() == 1) {
-#pragma omp parallel num_threads(2)
+#pragma omp parallel num_threads(num_threads)
             {
                 WorkerArg* arg = new WorkerArg;
                 int id = omp_get_thread_num();
