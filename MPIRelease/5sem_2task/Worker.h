@@ -22,7 +22,7 @@ enum MESSAGE_TYPE {
 class Worker {
 public:
     void worker_function(int rank, int comm_size);
-    Worker() {field = new Field; prev_field = new Field; }
+    Worker();
     
 private:
     int id;
@@ -34,14 +34,21 @@ private:
     int field_width;
     int iterations_todo;
     int iterations_ready;
-    bool waiting_stop = false;
-    bool after_stop = true;
+    bool waiting_stop;
+    bool after_stop;
     MPI_Request stop_request;
     int count_live_neighbors(int x, int y);
     void perform_field(bool* received_low_row, bool* received_high_row);
     bool check_break_work();
     
 };
+
+Worker::Worker() {
+    field = new Field;
+    prev_field = new Field;
+    waiting_stop = false;
+    after_stop = true;
+}
 
 void Worker::worker_function(int rank, int comm_size) {
     id = rank;
