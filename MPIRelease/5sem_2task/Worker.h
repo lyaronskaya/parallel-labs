@@ -88,10 +88,10 @@ void Worker::worker_function(int rank, int comm_size) {
             if (received_iteration <= iterations_ready) {
                 iterations_todo = 0;
                 iterations_ready = received_iteration - 1;
-                continue;
+            } else {
+                MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
+                         MPI_COMM_WORLD, &status);
             }
-            MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
-                     MPI_COMM_WORLD, &status);
         }
         
         field->write_row(higher_row_send, field_height - 2);
@@ -103,10 +103,10 @@ void Worker::worker_function(int rank, int comm_size) {
             if (received_iteration <= iterations_ready) {
                 iterations_todo = 0;
                 iterations_ready = received_iteration - 1;
-                continue;
+            } else {
+                MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
+                         MPI_COMM_WORLD, &status);
             }
-            MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
-                     MPI_COMM_WORLD, &status);
         }
         
         perform_field(lower_row_receive, higher_row_receive);
