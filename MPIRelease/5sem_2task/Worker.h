@@ -76,7 +76,7 @@ void Worker::worker_function(int rank, int comm_size) {
     
     while(true) {
         bool curr_status = check_break_work();
-        if (curr_status)
+        if (!curr_status)
             break;
         
         field->write_row(lower_row_send, 1);
