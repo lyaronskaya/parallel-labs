@@ -140,9 +140,7 @@ bool Worker::check_break_work() {
             case RUN:
                 iterations_todo += message;
                 after_stop = true;
-                int answer = iterations_todo;
-                MPI_Send(&answer, 1, MPI::INT,
-                         0, FIELD_INIT, MPI_COMM_WORLD);
+                MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
                 return true;
             case FINISH:
                 return false;
