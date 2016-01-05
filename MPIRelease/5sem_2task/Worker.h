@@ -207,7 +207,7 @@ int Worker::count_live_neighbors(int x, int y) {
         for (int j = y - 1; j <= y + 1; ++j) {
             if (i == x && j == y)
                 continue;
-            if (prev_field->data[i][j]) {
+            if (prev_field->data[i][(j + field_height) % field_height]) {
                 count++;
             }
         }

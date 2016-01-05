@@ -56,7 +56,7 @@ struct StatusHandler : public Handler {
             return;
         }
         master->gather_field();
-        cout << "Iteration number " << master->get_iter_number();
+        cout << "Iteration number " << master->get_iter_number() << endl;
         master->get_field()->print_world();
     }
 };
