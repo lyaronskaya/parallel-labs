@@ -99,13 +99,13 @@ void Worker::worker_function(int rank, int comm_size) {
         
         field->write_row(higher_row_send, field_height - 2);
         MPI_Sendrecv(higher_row_send, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
-                     lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
+                     lower_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         if (status.MPI_TAG == STOP) {
             int received_iteration = int_from_boolarray(lower_row_receive, field_height);
             if (received_iteration <= iterations_ready) {
                 iterations_todo = 0;
-                iterations_ready = received_iteration;
+                iterations_ready = received_iteration - 1;
                 continue;
             }
             MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
@@ -122,8 +122,14 @@ bool Worker::check_break_work() {
     int message;
     int flag = false;
     MPI_Status status;
+    bool iteration_sent = false;
     
     while (iterations_todo <= 0) {
+        if (!iteration_sent && iterations_ready > 0) {
+            int curr_max = iterations_ready + iterations_todo;
+            MPI_Send(&curr_max, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
+            iteration_sent = true;
+        }
         if (waiting_stop && after_stop) {
             while(!flag) {
                 MPI_Test(&stop_request, &flag, &status);
