@@ -58,7 +58,7 @@ void Worker::worker_function(int rank, int comm_size) {
     int worker_arg[2];
     MPI_Status status;
     MPI_Recv(worker_arg, 2, MPI::INT, 0, FIELD_INFO, MPI_COMM_WORLD, &status);
-    field_width = worker_arg[0] + 2;
+    field_width = worker_arg[0];
     field_height = worker_arg[1];
     field_buffer = new bool[field_height * (field_width + 2)];
     
