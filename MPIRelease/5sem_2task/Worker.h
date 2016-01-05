@@ -42,16 +42,13 @@ private:
 };
 
 void Worker::worker_function(int rank, int comm_size) {
-//    cout << "worker " << rank << "Started ";
     id = rank;
     workersCount = comm_size - 1;
     iterations_todo = 0;
     iterations_ready = 0;
     int worker_arg[2];
     MPI_Status status;
-//    cout << "worker " << rank << "started receive field info\n";
     MPI_Recv(worker_arg, 2, MPI::INT, 0, FIELD_INFO, MPI_COMM_WORLD, &status);
-//    cout << "worker " << rank << "ended receive field info\n";
     field_width = worker_arg[0] + 2;
     field_height = worker_arg[1];
     field_buffer = new bool[field_height * (field_width + 2)];
@@ -115,7 +112,7 @@ void Worker::worker_function(int rank, int comm_size) {
 bool Worker::check_break_work() {
     int message;
     int flag = false;
-    bool wait_stop = false;
+    bool waiting_stop = false;
     bool after_stop = false;
     MPI_Status status;
     
@@ -136,25 +133,25 @@ bool Worker::check_break_work() {
         }
     }
     
-    if (id == 1 && !after_stop) {
-        if (!wait_stop) {
-            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-            wait_stop = true;
+    if (id == 1 && after_stop) {
+        if (!waiting_stop) {
+            MPI_Irecv(&message, 1, MPI::INT, 0, STOP, MPI_COMM_WORLD, &stop_request);
+            waiting_stop = true;
         }
         MPI_Test(&stop_request, &flag, &status);
         if (flag) {
-            wait_stop = false;
+            waiting_stop = false;
             if (iterations_todo > 0) {
                 return true;
             }
             iterations_todo += 2;
             for (int i = 2; i <= workersCount; ++i) {
-                bool iteration_buf[field_height];
-                boolarray_from_int(iterations_ready, iteration_buf, field_height);
-                MPI_Send(iteration_buf, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
+                bool iteration_buffer[field_height];
+                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
+                MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
         }
-        after_stop = true;
+        after_stop = false;
     }
     
     return true;
