@@ -99,11 +99,11 @@ void Master::run_workers(int iterations) {
     for (int i = 1; i <= workersCount; ++i) {
         MPI_Send(&iterations, 1, MPI::INT, i, RUN, MPI_COMM_WORLD);
     }
-    bool* answer = new bool[1];
+    int answer;
     MPI_Status status;
     for (int i = 1; i <= workersCount; ++i) {
-        MPI_Recv(answer, 1, MPI::BOOL, i, FIELD_INIT, MPI_COMM_WORLD, &status);
-        cout << "answer " << answer[0] << endl;
+        MPI_Recv(&answer, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
+        cout << "answer " << answer << endl;
     }
 }
 
