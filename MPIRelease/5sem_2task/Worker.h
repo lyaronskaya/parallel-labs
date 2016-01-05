@@ -109,7 +109,7 @@ void Worker::worker_function(int rank, int comm_size) {
             }
         }
         
-        perform_field(lower_row_receive, higher_row_receive);
+//        perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
         iterations_ready++;
 //        if (id == 1 && iterations_ready == 1)
