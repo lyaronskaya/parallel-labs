@@ -107,13 +107,16 @@ void Worker::worker_function(int rank, int comm_size) {
             }
             MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
                      MPI_COMM_WORLD, &status);
+            if (iterations_ready == 0) {
+                MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
+            }
         }
         
         perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
         iterations_ready++;
-        if (id == 1 && iterations_ready == 1)
-            MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
+//        if (id == 1 && iterations_ready == 1)
+//            MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
     }
 }
 
@@ -142,7 +145,6 @@ bool Worker::check_break_work() {
             case RUN:
                 iterations_todo += message;
                 after_stop = true;
-                MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
                 return true;
             case FINISH:
                 return false;
