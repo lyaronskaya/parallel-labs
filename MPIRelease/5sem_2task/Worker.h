@@ -73,9 +73,6 @@ void Worker::worker_function(int rank, int comm_size) {
     bool* higher_row_send = new bool[field_height];
     bool* lower_row_receive = new bool[field_height];
     bool* higher_row_receive = new bool[field_height];
-    bool answer = true;
-    MPI_Send(&answer, 1, MPI::BOOL,
-             0, FIELD_INIT, MPI_COMM_WORLD);
     
     while(true) {
         bool curr_status = check_break_work();
@@ -123,6 +120,9 @@ bool Worker::check_break_work() {
     int flag = false;
     MPI_Status status;
     bool iteration_sent = false;
+    bool answer = true;
+    MPI_Send(&answer, 1, MPI::BOOL,
+             0, FIELD_INIT, MPI_COMM_WORLD);
     
     while (iterations_todo <= 0) {
         if (!iteration_sent && iterations_ready > 0) {
