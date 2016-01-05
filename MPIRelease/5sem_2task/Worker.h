@@ -112,6 +112,7 @@ void Worker::worker_function(int rank, int comm_size) {
         perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
         iterations_ready++;
+        MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
     }
 }
 

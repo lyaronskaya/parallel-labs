@@ -105,6 +105,8 @@ void Master::run_workers(int iterations) {
         MPI_Recv(&answer, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
         cout << "answer " << answer << endl;
     }
+    MPI_Recv(&answer, 1, MPI::INT, 1, FIELD_INIT, MPI_COMM_WORLD, &status);
+    cout << "answer from first " << answer << endl;
 }
 
 void Master::change_state(StateType s) {
@@ -120,7 +122,7 @@ void Master::stop_workers() {
     bool some_message = 0;
     cout << "Master starts stopping workers\n";
     MPI_Send(&some_message, 1, MPI::INT, 1, STOP, MPI_COMM_WORLD);
-    cout << "Master sent some info\n" << workersCount << endl;
+    cout << "Master sent some info\n";
     for (int i = 2; i <= workersCount; ++i) {
         MPI_Recv(&iterNumber, 1, MPI::INT, i, ITERATION_GATHER, MPI_COMM_WORLD, &status);
         cout << "received from " << i << endl;
