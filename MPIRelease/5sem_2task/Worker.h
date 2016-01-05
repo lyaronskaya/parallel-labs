@@ -34,6 +34,8 @@ private:
     int field_width;
     int iterations_todo;
     int iterations_ready;
+    bool waiting_stop = false;
+    bool after_stop = true;
     MPI_Request stop_request;
     int count_live_neighbors(int x, int y);
     void perform_field(bool* received_low_row, bool* received_high_row);
@@ -112,12 +114,17 @@ void Worker::worker_function(int rank, int comm_size) {
 bool Worker::check_break_work() {
     int message;
     int flag = false;
-    bool waiting_stop = false;
-    bool after_stop = false;
     MPI_Status status;
     
     while (iterations_todo <= 0) {
-        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        if (waiting_stop && after_stop) {
+            while(!flag) {
+                MPI_Test(&stop_request, &flag, &status);
+            }
+            waiting_stop = false;
+        } else {
+            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        }
         
         switch (status.MPI_TAG) {
             case RUN:
@@ -129,6 +136,8 @@ bool Worker::check_break_work() {
             case FIELD_GATHER:
                 field->write_to_buffer(field_buffer, 0, field_width);
                 MPI_Send(field_buffer, field_width * field_height, MPI::BOOL, 0, FIELD_GATHER, MPI_COMM_WORLD);
+                break;
+            case STOP:
                 break;
         }
     }
@@ -144,7 +153,7 @@ bool Worker::check_break_work() {
             if (iterations_todo > 0) {
                 return true;
             }
-            iterations_todo += 2;
+            iterations_todo = 1;
             for (int i = 2; i <= workersCount; ++i) {
                 bool iteration_buffer[field_height];
                 boolarray_from_int(iterations_ready, iteration_buffer, field_height);

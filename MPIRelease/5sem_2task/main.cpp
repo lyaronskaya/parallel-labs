@@ -28,24 +28,15 @@ int main(int argc, char** argv) {
         Worker worker = Worker();
         worker.worker_function(rank, size);
     }
-//
-////    printf("\nBefore sending: i= %d on %d\n", i, rank);
-//    if (rank==0) {
-////        cout << i + 10 << "\n";
-//        cin >> i;
-//        cerr << "end" << endl;
-//        MPI_Send(&i, 1, MPI_INT, 1, mymessage, MPI_COMM_WORLD);
-//    }
-//    if (rank==1) {
-//        int j;
-////        cerr << "start" << endl;
-//        cin >> j;
-////        cerr << "end" << endl;
-////        cout << "j" << j << "\n";
-//        MPI_Recv(buf,1, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-//    }
-    
+
     MPI_Finalize();
     return 0;
 }
+
+
+
+
+
+
+
 

@@ -10,7 +10,6 @@
 		163D3C941C1D560100ED66EF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 163D3C931C1D560100ED66EF /* main.cpp */; };
 		163D3CA51C1D56AF00ED66EF /* libmpi_cxx.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 163D3CA41C1D56AF00ED66EF /* libmpi_cxx.1.dylib */; };
 		163D3CA71C1D56D700ED66EF /* libmpi.12.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 163D3CA61C1D56D700ED66EF /* libmpi.12.dylib */; };
-		163D3CAB1C1F59DD00ED66EF /* CommandException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 163D3CAA1C1F59DD00ED66EF /* CommandException.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -51,7 +50,6 @@
 		163D3CA31C1D564800ED66EF /* Worker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Worker.h; sourceTree = "<group>"; };
 		163D3CA41C1D56AF00ED66EF /* libmpi_cxx.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpi_cxx.1.dylib; path = ../../../../opt/openmpi/lib/libmpi_cxx.1.dylib; sourceTree = "<group>"; };
 		163D3CA61C1D56D700ED66EF /* libmpi.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpi.12.dylib; path = ../../../../opt/openmpi/lib/libmpi.12.dylib; sourceTree = "<group>"; };
-		163D3CAA1C1F59DD00ED66EF /* CommandException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandException.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +88,6 @@
 			children = (
 				163D3C9A1C1D564800ED66EF /* CommandException.h */,
 				163D3C9B1C1D564800ED66EF /* Field.h */,
-				163D3CAA1C1F59DD00ED66EF /* CommandException.cpp */,
 				163D3C9C1C1D564800ED66EF /* Handler.h */,
 				163D3C9D1C1D564800ED66EF /* LifeSolver.h */,
 				163D3C9E1C1D564800ED66EF /* Master.h */,
@@ -162,7 +159,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				163D3C941C1D560100ED66EF /* main.cpp in Sources */,
-				163D3CAB1C1F59DD00ED66EF /* CommandException.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +290,7 @@
 				163D3C991C1D560100ED66EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
