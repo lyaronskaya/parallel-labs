@@ -108,7 +108,7 @@ void Worker::worker_function(int rank, int comm_size) {
                          MPI_COMM_WORLD, &status);
             }
         }
-        break;
+    
 //        perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
         iterations_ready++;
