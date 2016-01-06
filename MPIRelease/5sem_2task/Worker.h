@@ -85,9 +85,9 @@ void Worker::worker_function(int rank, int comm_size) {
         
         if (status.MPI_TAG == STOP) {
             int new_max_iteration;
+            MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;
-            MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(higher_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
@@ -103,10 +103,10 @@ void Worker::worker_function(int rank, int comm_size) {
                      lower_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         if (status.MPI_TAG == STOP) {
+            MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
             int new_max_iteration;
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;
-            MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(lower_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
@@ -179,6 +179,7 @@ bool Worker::check_break_work() {
                 boolarray_from_int(iterations_ready, iteration_buffer, field_height);
                 MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
+            
             int new_max_iteration;
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;

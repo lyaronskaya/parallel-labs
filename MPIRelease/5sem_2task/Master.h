@@ -123,7 +123,9 @@ void Master::stop_workers() {
     cout << "Master starts stopping workers\n";
     MPI_Send(&some_message, 1, MPI::INT, 1, STOP, MPI_COMM_WORLD);
     cout << "Master sent some info\n";
-    MPI_Allreduce(&iterNumber, &iterNumber, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+    int new_iter_number;
+    MPI_Allreduce(&iterNumber, &new_iter_number, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+    iterNumber = new_iter_number;
     cout << "Master received result of reduction: " << iterNumber << endl;
 //    for (int i = 2; i <= workersCount; ++i) {
 //        MPI_Recv(&iterNumber, 1, MPI::INT, i, ITERATION_GATHER, MPI_COMM_WORLD, &status);
