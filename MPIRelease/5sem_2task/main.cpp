@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         Worker worker = Worker();
         worker.worker_function(rank, size);
     }
-
+    
     MPI_Finalize();
     return 0;
 }

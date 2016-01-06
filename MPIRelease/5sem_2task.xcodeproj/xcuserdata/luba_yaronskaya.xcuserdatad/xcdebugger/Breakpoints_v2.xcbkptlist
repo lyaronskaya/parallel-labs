@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "5sem_2task/MPIHandler.h"
-            timestampString = "471891347.907368"
+            timestampString = "473786830.73179"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
             landmarkName = "handle(void* arg)"
             landmarkType = "7">
          </BreakpointContent>
