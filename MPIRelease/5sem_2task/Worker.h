@@ -79,15 +79,15 @@ void Worker::worker_function(int rank, int comm_size) {
         if (!curr_status)
             break;
         
+        bool received_stop = false;
+        
         field->write_row(lower_row_send, 1);
         MPI_Sendrecv(lower_row_send, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
                      higher_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         if (status.MPI_TAG == STOP) {
-            int new_max_iteration;
+            received_stop = true;
             MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
-            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-            iterations_todo = new_max_iteration - iterations_ready;
 //            int received_iteration = int_from_boolarray(higher_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
@@ -103,10 +103,8 @@ void Worker::worker_function(int rank, int comm_size) {
                      lower_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         if (status.MPI_TAG == STOP) {
+            received_stop = true;
             MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
-            int new_max_iteration;
-            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-            iterations_todo = new_max_iteration - iterations_ready;
 //            int received_iteration = int_from_boolarray(lower_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
@@ -115,6 +113,12 @@ void Worker::worker_function(int rank, int comm_size) {
 //                MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
 //                         MPI_COMM_WORLD, &status);
 //            }
+        }
+        
+        if (received_stop) {
+            int new_max_iteration;
+            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+            iterations_todo = new_max_iteration - iterations_ready;
         }
     
         perform_field(lower_row_receive, higher_row_receive);
