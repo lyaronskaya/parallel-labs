@@ -115,11 +115,11 @@ void Worker::worker_function(int rank, int comm_size) {
 //            }
         }
         
-//        if (received_stop) {
-//            int new_max_iteration;
-//            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-//            iterations_todo = new_max_iteration - iterations_ready;
-//        }
+        if (received_stop) {
+            int new_max_iteration;
+            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+            iterations_todo = new_max_iteration - iterations_ready;
+        }
     
         perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
@@ -142,12 +142,12 @@ bool Worker::check_break_work() {
 //            MPI_Send(&curr_max, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
 //            iteration_sent = true;
 //        }
-        if (!iteration_sent && iterations_ready > 0) {
-            int new_max_iteration;
-            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-            iterations_todo = new_max_iteration - iterations_ready;
-            iteration_sent = true;
-        }
+//        if (!iteration_sent && iterations_ready > 0) {
+//            int new_max_iteration;
+//            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+//            iterations_todo = new_max_iteration - iterations_ready;
+//            iteration_sent = true;
+//        }
         
         if (waiting_stop && after_stop) {
             while(!flag) {
@@ -169,8 +169,8 @@ bool Worker::check_break_work() {
                 field->write_to_buffer(field_buffer, 0, field_width);
                 MPI_Send(field_buffer, field_width * field_height, MPI::BOOL, 0, FIELD_GATHER, MPI_COMM_WORLD);
                 break;
-//            case STOP:
-//                break;
+            case STOP:
+                break;
         }
     }
     
@@ -187,9 +187,10 @@ bool Worker::check_break_work() {
 //            }
 //            iterations_todo = 1;
             for (int i = 2; i <= workersCount; ++i) {
-                bool iteration_buffer[field_height];
-                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
-                MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
+//                bool iteration_buffer[field_height];
+//                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
+                bool some_message[field_height];
+                MPI_Send(some_message, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
             
             int new_max_iteration;
