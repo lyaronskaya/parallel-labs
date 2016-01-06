@@ -132,6 +132,7 @@ bool Worker::check_break_work() {
     bool iteration_sent = false;
     
     while (iterations_todo <= 0) {
+        flag = false;
 //        if (!iteration_sent && iterations_ready > 0) {
 //            int curr_max = iterations_ready + iterations_todo;
 //            MPI_Send(&curr_max, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
