@@ -34,7 +34,7 @@ private:
     int field_width;
     int iterations_todo;
     int iterations_ready;
-    bool waiting_stop;
+    bool init_stop;
     bool after_stop;
     MPI_Request stop_request;
     int count_live_neighbors(int x, int y);
@@ -46,7 +46,7 @@ private:
 Worker::Worker() {
     field = new Field;
     prev_field = new Field;
-    waiting_stop = false;
+    init_stop = false;
     after_stop = true;
 }
 
@@ -85,7 +85,7 @@ void Worker::worker_function(int rank, int comm_size) {
         MPI_Sendrecv(lower_row_send, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
                      higher_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
-        if (status.MPI_TAG == STOP) {
+        if (status.MPI_TAG == STOP && status.MPI_SOURCE == 1) {
             received_stop = true;
             MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(higher_row_receive, field_height);
@@ -102,7 +102,7 @@ void Worker::worker_function(int rank, int comm_size) {
         MPI_Sendrecv(higher_row_send, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
                      lower_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
-        if (status.MPI_TAG == STOP) {
+        if (status.MPI_TAG == STOP && status.MPI_SOURCE == 1) {
             received_stop = true;
             MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(lower_row_receive, field_height);
@@ -149,11 +149,12 @@ bool Worker::check_break_work() {
 //            iteration_sent = true;
 //        }
         
-        if (waiting_stop && after_stop) {
-            while(!flag) {
-                MPI_Test(&stop_request, &flag, &status);
-            }
-            waiting_stop = false;
+        if (init_stop && after_stop) {
+            MPI_Test(&stop_request, &flag, &status);
+//            while(!flag) {
+//                MPI_Test(&stop_request, &flag, &status);
+//            }
+//            init_stop = false;
         } else {
             MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         }
@@ -175,13 +176,13 @@ bool Worker::check_break_work() {
     }
     
     if (id == 1 && after_stop) {
-        if (!waiting_stop) {
+        if (!init_stop) {
             MPI_Irecv(&message, 1, MPI::INT, 0, STOP, MPI_COMM_WORLD, &stop_request);
-            waiting_stop = true;
+            init_stop = true;
         }
         MPI_Test(&stop_request, &flag, &status);
         if (flag) {
-            waiting_stop = false;
+            init_stop = false;
 //            if (iterations_todo > 0) {
 //                return true;
 //            }
