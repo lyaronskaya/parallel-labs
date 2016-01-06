@@ -13,11 +13,6 @@
 #include "Handler.h"
 
 using namespace std;
-//
-//struct HandlerArg {
-//    Field* life_field;
-//    Master* master;
-//};
 
 struct StartHandler : public Handler {
     void handle(void* arg) {
