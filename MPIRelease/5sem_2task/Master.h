@@ -79,9 +79,11 @@ void Master::gather_field() {
             worker_arg[0] += life_field->width % workersCount;
         }
         
-        MPI_Sendrecv(&some_message, 1, MPI::INT,
-                     i, FIELD_GATHER, field_part_pointer, worker_arg[0] * life_field->height, MPI::BOOL,
-                     i, FIELD_GATHER, MPI_COMM_WORLD, &status);
+//        MPI_Sendrecv(&some_message, 1, MPI::INT,
+//                     i, FIELD_GATHER, field_part_pointer, worker_arg[0] * life_field->height, MPI::BOOL,
+//                     i, FIELD_GATHER, MPI_COMM_WORLD, &status);
+        MPI_Send(&some_message, 1, MPI::INT, i, FIELD_GATHER, MPI_COMM_WORLD);
+        MPI_Recv(field_part_pointer, worker_arg[0] * life_field->height, MPI::BOOL, i, FIELD_GATHER, MPI_COMM_WORLD, &status);
         field_part_pointer += worker_arg[0] * life_field->height;
     }
     life_field->init_from_buffer(field_buffer, life_field->width, life_field->height);

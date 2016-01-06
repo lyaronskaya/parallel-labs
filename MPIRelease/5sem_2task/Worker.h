@@ -147,6 +147,7 @@ bool Worker::check_break_work() {
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;
         }
+        
         if (waiting_stop && after_stop) {
             while(!flag) {
                 MPI_Test(&stop_request, &flag, &status);
