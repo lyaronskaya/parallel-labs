@@ -149,15 +149,16 @@ bool Worker::check_break_work() {
 //            iteration_sent = true;
 //        }
         
-        if (init_stop && after_stop) {
-            MPI_Test(&stop_request, &flag, &status);
-//            while(!flag) {
-//                MPI_Test(&stop_request, &flag, &status);
-//            }
-//            init_stop = false;
-        } else {
-            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        }
+//        if (init_stop && after_stop) {
+//            MPI_Test(&stop_request, &flag, &status);
+////            while(!flag) {
+////                MPI_Test(&stop_request, &flag, &status);
+////            }
+////            init_stop = false;
+//        } else {
+//            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+//        }
+        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         switch (status.MPI_TAG) {
             case RUN:
