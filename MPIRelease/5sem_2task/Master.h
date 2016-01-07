@@ -115,15 +115,16 @@ void Master::stop_workers() {
     MPI_Send(&some_message, 1, MPI::INT, 1, STOP, MPI_COMM_WORLD);
     cout << "Master sent some info\n";
     int new_iter_number;
-    for (int i = 1; i <= workersCount; ++i) {
-        int iterations_todo;
-        MPI_Recv(&iterations_todo, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
-        cout << "received from " << i << " " << iterations_todo << endl;
+    int iterations_ready;
+    for (int i = 2; i <= workersCount; ++i) {
+        MPI_Recv(&iterations_ready, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
+        cout << "received from " << i << " " << iterations_ready << endl;
     }
+    iterNumber = iterations_ready;
     cout << "But previous iterNumber " << iterNumber << endl;
-    MPI_Allreduce(&iterNumber, &new_iter_number, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-    iterNumber = new_iter_number;
-    cout << "Master received result of reduction: " << iterNumber << endl;
+//    MPI_Allreduce(&iterNumber, &new_iter_number, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+//    iterNumber = new_iter_number;
+//    cout << "Master received result of reduction: " << iterNumber << endl;
 //    for (int i = 2; i <= workersCount; ++i) {
 //        MPI_Recv(&iterNumber, 1, MPI::INT, i, ITERATION_GATHER, MPI_COMM_WORLD, &status);
 //        cout << "received from " << i << " " << iterNumber << endl;
