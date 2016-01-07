@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		163D3C941C1D560100ED66EF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 163D3C931C1D560100ED66EF /* main.cpp */; };
-		163D3CA51C1D56AF00ED66EF /* libmpi_cxx.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 163D3CA41C1D56AF00ED66EF /* libmpi_cxx.1.dylib */; };
-		163D3CA71C1D56D700ED66EF /* libmpi.12.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 163D3CA61C1D56D700ED66EF /* libmpi.12.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -48,8 +46,6 @@
 		163D3CA11C1D564800ED66EF /* todo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo; sourceTree = "<group>"; };
 		163D3CA21C1D564800ED66EF /* utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utility.h; sourceTree = "<group>"; };
 		163D3CA31C1D564800ED66EF /* Worker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Worker.h; sourceTree = "<group>"; };
-		163D3CA41C1D56AF00ED66EF /* libmpi_cxx.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpi_cxx.1.dylib; path = ../../../../opt/openmpi/lib/libmpi_cxx.1.dylib; sourceTree = "<group>"; };
-		163D3CA61C1D56D700ED66EF /* libmpi.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmpi.12.dylib; path = ../../../../opt/openmpi/lib/libmpi.12.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +53,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				163D3CA71C1D56D700ED66EF /* libmpi.12.dylib in Frameworks */,
-				163D3CA51C1D56AF00ED66EF /* libmpi_cxx.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,8 +62,6 @@
 		163D3C871C1D560100ED66EF = {
 			isa = PBXGroup;
 			children = (
-				163D3CA61C1D56D700ED66EF /* libmpi.12.dylib */,
-				163D3CA41C1D56AF00ED66EF /* libmpi_cxx.1.dylib */,
 				163D3C921C1D560100ED66EF /* 5sem_2task */,
 				163D3C911C1D560100ED66EF /* Products */,
 			);

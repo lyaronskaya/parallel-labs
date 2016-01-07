@@ -120,6 +120,7 @@ void Master::stop_workers() {
         MPI_Recv(&iterations_todo, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
         cout << "received from " << i << " " << iterations_todo << endl;
     }
+    cout << "But previous iterNumber " << iterNumber << endl;
     MPI_Allreduce(&iterNumber, &new_iter_number, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
     iterNumber = new_iter_number;
     cout << "Master received result of reduction: " << iterNumber << endl;
