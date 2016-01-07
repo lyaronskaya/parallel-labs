@@ -117,7 +117,7 @@ void Worker::worker_function(int rank, int comm_size) {
         
         if (received_stop) {
             int new_max_iteration;
-            MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
+            MPI_Send(&iterations_ready, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;
         }
