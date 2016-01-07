@@ -126,6 +126,7 @@ void Master::stop_workers() {
     for (int i = 2; i <= workersCount; ++i) {
         int iterations_todo;
         MPI_Recv(&iterations_todo, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
+        cout << "received from " << i << " " << iterations_todo << endl;
     }
     MPI_Allreduce(&iterNumber, &new_iter_number, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
     iterNumber = new_iter_number;
