@@ -173,7 +173,7 @@ bool Worker::check_break_work() {
                 MPI_Send(field_buffer, field_width * field_height, MPI::BOOL, 0, FIELD_GATHER, MPI_COMM_WORLD);
                 break;
             case STOP:
-                flag = true;
+                //flag = true;
                 break;
         }
     }
