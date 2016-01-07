@@ -204,7 +204,7 @@ bool Worker::check_break_work() {
                 bool some_message[field_height];
                 MPI_Send(some_message, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
-           
+            received_stop = true;
 //            int new_max_iteration;
 //            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
 //            iterations_todo = new_max_iteration - iterations_ready;
