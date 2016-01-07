@@ -125,8 +125,6 @@ void Worker::worker_function(int rank, int comm_size) {
         perform_field(lower_row_receive, higher_row_receive);
         iterations_todo--;
         iterations_ready++;
-//        if (id == 1 && iterations_ready == 1)
-//            MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
     }
 }
 
@@ -143,12 +141,12 @@ bool Worker::check_break_work() {
 //            MPI_Send(&curr_max, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
 //            iteration_sent = true;
 //        }
-        if (!iteration_sent && iterations_ready > 0) {
-            int new_max_iteration;
-            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-            iterations_todo = new_max_iteration - iterations_ready;
-            iteration_sent = true;
-        }
+//        if (!iteration_sent && iterations_ready > 0) {
+//            int new_max_iteration;
+//            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+//            iterations_todo = new_max_iteration - iterations_ready;
+//            iteration_sent = true;
+//        }
         
         if (init_stop && after_stop) {
             MPI_Test(&stop_request, &flag, &status);
