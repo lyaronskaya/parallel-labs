@@ -115,7 +115,7 @@ void Master::stop_workers() {
     MPI_Send(&some_message, 1, MPI::INT, 1, STOP, MPI_COMM_WORLD);
     cout << "Master sent some info\n";
     int new_iter_number;
-    for (int i = 2; i <= workersCount; ++i) {
+    for (int i = 1; i <= workersCount; ++i) {
         int iterations_todo;
         MPI_Recv(&iterations_todo, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
         cout << "received from " << i << " " << iterations_todo << endl;
