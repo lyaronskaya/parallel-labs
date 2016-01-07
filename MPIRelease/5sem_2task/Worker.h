@@ -200,10 +200,10 @@ bool Worker::check_break_work() {
         MPI_Test(&stop_request, &flag, &status);
         if (flag) {
             init_stop = false;
-//            if (iterations_todo > 0) {
-//                return true;
-//            }
-//            iterations_todo = 1;
+            if (iterations_todo > 0) {
+                return true;
+            }
+            iterations_todo = 1;
             for (int i = 2; i <= workersCount; ++i) {
                 bool iteration_buffer[field_height];
 //                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
