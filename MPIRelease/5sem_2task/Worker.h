@@ -85,7 +85,7 @@ void Worker::worker_function(int rank, int comm_size) {
         MPI_Sendrecv(lower_row_send, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
                      higher_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
-        if (status.MPI_TAG == STOP && status.MPI_SOURCE == 1) {
+        if (status.MPI_TAG == STOP) {
             received_stop = true;
             MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(higher_row_receive, field_height);
@@ -102,7 +102,7 @@ void Worker::worker_function(int rank, int comm_size) {
         MPI_Sendrecv(higher_row_send, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
                      lower_row_receive, field_height, MPI::BOOL, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
-        if (status.MPI_TAG == STOP && status.MPI_SOURCE == 1) {
+        if (status.MPI_TAG == STOP) {
             received_stop = true;
             MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV, MPI_COMM_WORLD, &status);
 //            int received_iteration = int_from_boolarray(lower_row_receive, field_height);
