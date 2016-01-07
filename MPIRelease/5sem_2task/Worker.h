@@ -198,7 +198,7 @@ bool Worker::check_break_work() {
             }
             
             int new_max_iteration;
-            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+//            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
             iterations_todo = new_max_iteration - iterations_ready;
             return true;
         }
