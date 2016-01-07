@@ -143,12 +143,12 @@ bool Worker::check_break_work() {
 //            MPI_Send(&curr_max, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
 //            iteration_sent = true;
 //        }
-//        if (!iteration_sent && iterations_ready > 0) {
-//            int new_max_iteration;
-//            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-//            iterations_todo = new_max_iteration - iterations_ready;
-//            iteration_sent = true;
-//        }
+        if (!iteration_sent && iterations_ready > 0) {
+            int new_max_iteration;
+            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
+            iterations_todo = new_max_iteration - iterations_ready;
+            iteration_sent = true;
+        }
         
         if (init_stop && after_stop) {
             MPI_Test(&stop_request, &flag, &status);
@@ -196,10 +196,10 @@ bool Worker::check_break_work() {
                 bool some_message[field_height];
                 MPI_Send(some_message, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
-            
-            int new_max_iteration;
+           
+//            int new_max_iteration;
 //            MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
-            iterations_todo = new_max_iteration - iterations_ready;
+//            iterations_todo = new_max_iteration - iterations_ready;
             return true;
         }
         after_stop = false;
