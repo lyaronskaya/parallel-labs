@@ -98,14 +98,6 @@ void Master::run_workers(int iterations) {
     for (int i = 1; i <= workersCount; ++i) {
         MPI_Send(&iterations, 1, MPI::INT, i, RUN, MPI_COMM_WORLD);
     }
-//    int answer;
-//    MPI_Status status;
-//    for (int i = 1; i <= workersCount; ++i) {
-//        MPI_Recv(&answer, 1, MPI::INT, i, FIELD_INIT, MPI_COMM_WORLD, &status);
-//        cout << "answer " << answer << endl;
-//    }
-//     MPI_Recv(&answer, 1, MPI::INT, 1, FIELD_INIT, MPI_COMM_WORLD, &status);
-//    cout << "answer from first " << answer << endl;
 }
 
 void Master::change_state(StateType s) {

@@ -91,7 +91,7 @@ void Worker::worker_function(int rank, int comm_size) {
 //            int received_iteration = int_from_boolarray(higher_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
-//                iterations_ready = received_iteration - 1;
+//                iterations_ready = received_iteration;
 //            } else {
 //                MPI_Recv(higher_row_receive, field_height, MPI::BOOL, higher_worker_id, ROW_SENDRECV,
 //                         MPI_COMM_WORLD, &status);
@@ -108,14 +108,14 @@ void Worker::worker_function(int rank, int comm_size) {
 //            int received_iteration = int_from_boolarray(lower_row_receive, field_height);
 //            if (received_iteration <= iterations_ready) {
 //                iterations_todo = 0;
-//                iterations_ready = received_iteration - 1;
+//                iterations_ready = received_iteration;
 //            } else {
 //                MPI_Recv(lower_row_receive, field_height, MPI::BOOL, lower_worker_id, ROW_SENDRECV,
 //                         MPI_COMM_WORLD, &status);
 //            }
         }
         
-        if (received_stop && id != 1) {
+        if (received_stop) {
             int new_max_iteration;
             MPI_Send(&iterations_todo, 1, MPI::INT, 0, FIELD_INIT, MPI_COMM_WORLD);
             MPI_Allreduce(&iterations_ready, &new_max_iteration, 1, MPI::INT, MPI_MAX, MPI_COMM_WORLD);
@@ -150,16 +150,16 @@ bool Worker::check_break_work() {
 //            iteration_sent = true;
 //        }
         
-//        if (init_stop && after_stop) {
-//            MPI_Test(&stop_request, &flag, &status);
-////            while(!flag) {
-////                MPI_Test(&stop_request, &flag, &status);
-////            }
-////            init_stop = false;
-//        } else {
-//            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-//        }
-        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        if (init_stop && after_stop) {
+            MPI_Test(&stop_request, &flag, &status);
+            while(!flag) {
+                MPI_Test(&stop_request, &flag, &status);
+            }
+            init_stop = false;
+        } else {
+            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+        }
+//        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         switch (status.MPI_TAG) {
             case RUN:

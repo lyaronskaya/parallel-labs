@@ -25,15 +25,12 @@ MPILifeSolver::MPILifeSolver() {
 }
 
 void MPILifeSolver::run(int size) {
-    cout << "run solver\n";
     master = new Master();
     master->set_workers_count(size - 1);
     while (true) {
-        cout << "start read command\n";
         cout << "$ ";
         string command;
         cin >> command;
-//        cout << "end read command\n";
         if (handlers[command]) {
             handlers[command]->handle(master);
         }
