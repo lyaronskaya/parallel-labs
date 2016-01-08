@@ -201,7 +201,7 @@ bool Worker::check_break_work() {
             if (iterations_todo > 0) {
                 return true;
             }
-            iterations_todo = 1;
+//            iterations_todo = 1;
 //            iterations_todo = min(iterations_todo, workersCount);
             for (int i = 2; i <= workersCount; ++i) {
                 bool* iteration_buffer = new bool[field_height];
