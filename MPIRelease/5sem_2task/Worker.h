@@ -200,14 +200,14 @@ bool Worker::check_break_work() {
         MPI_Test(&stop_request, &flag, &status);
         if (flag) {
             init_stop = false;
-            if (iterations_todo > 0) {
-                return true;
-            }
-            iterations_todo = 1;
+//            if (iterations_todo > 0) {
+//                return true;
+//            }
+//            iterations_todo = 1;
             for (int i = 2; i <= workersCount; ++i) {
                 bool iteration_buffer[field_height];
 //                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
-                int max_iteration = iterations_ready + min(iterations_todo, workersCount);
+                int max_iteration = iterations_ready/* + min(iterations_todo, workersCount)*/;
                 boolarray_from_int(max_iteration, iteration_buffer, field_height);
                 MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
