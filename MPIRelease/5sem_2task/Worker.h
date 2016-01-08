@@ -144,7 +144,6 @@ bool Worker::check_break_work() {
     bool iteration_sent = false;
     
     while (iterations_todo <= 0) {
-        flag = false;
         if (!iteration_sent && iterations_ready > 0) {
             MPI_Send(&iterations_ready, 1, MPI::INT, 0, ITERATION_GATHER, MPI_COMM_WORLD);
             iteration_sent = true;
@@ -164,16 +163,16 @@ bool Worker::check_break_work() {
 //            received_stop = false;
 //        }
         
-        if (init_stop && after_stop) {
-            MPI_Test(&stop_request, &flag, &status);
-            while(!flag) {
-                MPI_Test(&stop_request, &flag, &status);
-            }
-            init_stop = false;
-        } else {
-            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        }
-//        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+//        if (init_stop && after_stop) {
+//            MPI_Test(&stop_request, &flag, &status);
+//            while(!flag) {
+//                MPI_Test(&stop_request, &flag, &status);
+//            }
+//            init_stop = false;
+//        } else {
+//            MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+//        }
+        MPI_Recv(&message, 1, MPI::INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         
         switch (status.MPI_TAG) {
             case RUN:
@@ -187,7 +186,6 @@ bool Worker::check_break_work() {
                 MPI_Send(field_buffer, field_width * field_height, MPI::BOOL, 0, FIELD_GATHER, MPI_COMM_WORLD);
                 break;
             case STOP:
-                //flag = true;
                 break;
         }
     }
@@ -200,9 +198,9 @@ bool Worker::check_break_work() {
         MPI_Test(&stop_request, &flag, &status);
         if (flag) {
             init_stop = false;
-            if (iterations_todo > 0) {
-                return true;
-            }
+//            if (iterations_todo > 0) {
+//                return true;
+//            }
 //            iterations_todo = 1;
             iterations_todo = min(iterations_todo, workersCount);
             for (int i = 2; i <= workersCount; ++i) {
@@ -219,6 +217,7 @@ bool Worker::check_break_work() {
             return true;
         }
         after_stop = false;
+        flag = false;
     }
     
     return true;
