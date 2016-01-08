@@ -209,7 +209,7 @@ bool Worker::check_break_work() {
 //                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
                 int max_iteration = iterations_ready/* + min(iterations_todo, workersCount)*/;
                 boolarray_from_int(max_iteration, iteration_buffer, field_height);
-                MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
+                MPI_Send(&iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
 //            received_stop = true;
 //            int new_max_iteration;
