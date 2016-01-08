@@ -204,12 +204,13 @@ bool Worker::check_break_work() {
 //                return true;
 //            }
 //            iterations_todo = 1;
+            iterations_todo = min(iterations_todo, workersCount);
             for (int i = 2; i <= workersCount; ++i) {
-                bool iteration_buffer[field_height];
+                bool* iteration_buffer = new bool[field_height];
 //                boolarray_from_int(iterations_ready, iteration_buffer, field_height);
-                int max_iteration = iterations_ready/* + min(iterations_todo, workersCount)*/;
+                int max_iteration = iterations_ready + iterations_todo;
                 boolarray_from_int(max_iteration, iteration_buffer, field_height);
-                MPI_Send(&iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
+                MPI_Send(iteration_buffer, field_height, MPI::BOOL, i, STOP, MPI_COMM_WORLD);
             }
 //            received_stop = true;
 //            int new_max_iteration;
