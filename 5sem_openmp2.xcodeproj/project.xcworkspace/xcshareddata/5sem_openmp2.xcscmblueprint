@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "71B9F132C40B058CEF158A5C20C8F82F8724D632",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4BD75C932C5424A5B785A1AA6753C6815D11E34A" : 0,
+    "71B9F132C40B058CEF158A5C20C8F82F8724D632" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8C1995AA-B573-4371-858A-36F4335D4095",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4BD75C932C5424A5B785A1AA6753C6815D11E34A" : "llvm",
+    "71B9F132C40B058CEF158A5C20C8F82F8724D632" : "5sem_openmp2"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "5sem_openmp2",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "5sem_openmp2.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/clang-omp\/llvm",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4BD75C932C5424A5B785A1AA6753C6815D11E34A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lyaronskaya\/parallel-labs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "71B9F132C40B058CEF158A5C20C8F82F8724D632"
+    }
+  ]
+}
